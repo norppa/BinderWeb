@@ -1,10 +1,18 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import Welcome from './components/welcome/Welcome'
+import Binder from './components/binder/Binder'
 
-const App = (props) => {
+const Router = (props) => {
     return (
-        <div> - ReactSkeleton - </div>
+        <BrowserRouter>
+            <Switch>
+                <Route exact path='/' component={Welcome} />
+                <Route path='/:site' component={Binder} />
+            </Switch>
+        </BrowserRouter>
     )
 }
 
-ReactDOM.render(<App />, document.getElementById('app'))
+ReactDOM.render(<Router />, document.getElementById('app'))

@@ -25,7 +25,8 @@
   "homepage": "https://github.com/norppa/ReactSkeleton#readme",
   "dependencies": {
     "react": "^16.14.0",
-    "react-dom": "^16.14.0"
+    "react-dom": "^16.14.0",
+    "react-router-dom": "^5.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.3",
