@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import apiUtils from '../../utils/apiUtils'
+import './Binder.css'
 
 import Site from './Site'
 
 const Loading = (props) => {
     return (
         <div className="Loading">
-            Loading {props.site}...
+            <h1>Loading {props.site}...</h1>
         </div>
     )
 }
@@ -31,7 +32,7 @@ const Login = (props) => {
 
     return (
         <div className="Login">
-            Log in to /{props.site}
+            <h1>Log in to /{props.site}</h1>
             <form onSubmit={submit}>
                 <input type="password" value={password} onChange={(evt) => setPassword(evt.target.value)} />
             </form>
@@ -56,7 +57,7 @@ const Register = (props) => {
         if (registerResult.token) {
             return props.login(registerResult.token)
         }
-        
+
         setError('There was an error trying to register this site')
     }
 
@@ -66,12 +67,19 @@ const Register = (props) => {
 
     return (
         <div className="Register">
-            Create site /{props.site}
+            <h1>Create site /{props.site}</h1>
+            <div className="passwordRow">
                 Enter password:<input type="password" value={password} onChange={(evt) => setPassword(evt.target.value)} />
-            <br />
+            </div>
+            <div className="passwordRow">
                 Confirm password:<input type="password" value={confirm} onChange={(evt) => setConfirm(evt.target.value)} />
-            <button onClick={submit}>Create Site</button>
-            <button onClick={cancel}>Cancel</button>
+            </div>
+            <div className="buttonRow">
+                <button onClick={submit} disabled={password !== confirm || password === ''}>Create Site</button>
+                <button onClick={cancel}>Cancel</button>
+            </div>
+
+
 
             {error && <div className="error">{error}</div>}
 
@@ -97,7 +105,9 @@ const Binder = (props) => {
     }, [])
 
     const initialize = async () => {
+        console.log('initializing')
         const siteExists = await apiUtils.checkIfSiteExists(site)
+        console.log('siteExists', siteExists)
         if (siteExists) {
             const token = localStorage.getItem(TOKEN_KEY)
             if (token) {
