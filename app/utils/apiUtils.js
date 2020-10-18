@@ -50,7 +50,29 @@ const register = async (site, password) => {
     } catch (error) {
         return { error }
     }
-
 }
 
-export default { checkIfSiteExists, login, register }
+const getFiles = async (token) => {
+    console.log('getFiles', token)
+    const url = backend + '/files'
+    const options = {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + token,
+            'Accept': 'application/json'
+        }
+    }
+
+    try {
+        const result = await fetch(url, options)
+        if (result.status === 200) {
+            return await result.json()
+        }
+        throw new Error(result)
+    } catch (error) {
+        console.error(error)
+        return { error }
+    }
+}
+
+export default { checkIfSiteExists, login, register, getFiles }

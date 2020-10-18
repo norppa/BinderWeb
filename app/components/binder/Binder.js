@@ -105,14 +105,11 @@ const Binder = (props) => {
     }, [])
 
     const initialize = async () => {
-        console.log('initializing')
         const siteExists = await apiUtils.checkIfSiteExists(site)
-        console.log('siteExists', siteExists)
         if (siteExists) {
             const token = localStorage.getItem(TOKEN_KEY)
             if (token) {
-                setToken(token)
-                setView('site')
+                login(token)
             } else {
                 setView('login')
             }
@@ -121,8 +118,11 @@ const Binder = (props) => {
         }
     }
 
-    const login = (token) => {
+    const login = async (token) => {
         localStorage.setItem(TOKEN_KEY, token)
+
+        const files = await apiUtils.getFiles(token)
+        console.log('files')
         setToken(token)
         setView('site')
     }

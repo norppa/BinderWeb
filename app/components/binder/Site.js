@@ -1,12 +1,20 @@
 import React from 'react'
+import './Site.css'
 
 const Site = (props) => {
 
-    console.log('lll', props.logout, props.site)
     return (
         <div className="Site">
-            Main site
-            <button onClick={props.logout}>Logout</button>
+            <div className="header">
+                <button onClick={props.logout}>Logout</button>
+            </div>
+            <div className="navigation">
+navi
+            </div>
+            <div className="editor">
+                <textarea />
+            </div>
+
         </div>
     )
 }
