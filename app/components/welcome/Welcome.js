@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom'
 import './Welcome.css'
 
 const Welcome = (props) => {
+    const [view, setView] = useState('welcome')
     const [site, setSite] = useState('')
     const history = useHistory()
 
@@ -10,8 +11,9 @@ const Welcome = (props) => {
         event.preventDefault()
         history.push(`/${site}`)
     }
+
     return (
-        <div className="SiteSelector">
+        <div className="Welcome">
             <h1>Welcome to Binder</h1>
             <p>Please select the site you wish to access or create</p>
             <form onSubmit={submit}>
