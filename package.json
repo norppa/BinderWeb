@@ -8,7 +8,9 @@
       "@babel/preset-env",
       "@babel/preset-react"
     ],
-    "plugins": ["@babel/plugin-transform-runtime"]
+    "plugins": [
+      "@babel/plugin-transform-runtime"
+    ]
   },
   "scripts": {
     "start": "webpack serve",
@@ -27,6 +29,7 @@
   "dependencies": {
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
+    "react-icons": "^3.11.0",
     "react-router-dom": "^5.2.0"
   },
   "devDependencies": {

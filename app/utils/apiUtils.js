@@ -53,7 +53,7 @@ const register = async (site, password) => {
 }
 
 const getFiles = async (token) => {
-    console.log('getFiles', token)
+    // console.log('getFiles', token)
     const url = backend + '/files'
     const options = {
         method: 'GET',
@@ -75,4 +75,55 @@ const getFiles = async (token) => {
     }
 }
 
-export default { checkIfSiteExists, login, register, getFiles }
+const getFileContents = async (token, id) => {
+        // console.log('getFileContents', token, id)
+    const url = backend + '/files/' + id
+    const options = {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + token,
+            'Accept': 'application/json'
+        }
+    }
+
+    try {
+        const result = await fetch(url, options)
+        if (result.status === 200) {
+            const resultJson = await result.json()
+            return resultJson.contents
+        }
+        throw new Error(result)
+    } catch (error) {
+        console.error(error)
+        return { error }
+    }
+}
+
+const save = async (data, token) => {
+    console.log('save', data, token.substring(0,8))
+    const url = backend + '/files'
+    const options = {
+        method: 'POST',
+        headers: {
+            'Authorization': 'Bearer ' + token,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json;charset=utf-8'
+        },
+        body: JSON.stringify(data)
+    }
+
+    try {
+        const result = await fetch(url, options)
+        console.log('save result', result)
+        if (result.status === 200) {
+            return await result.json()
+        }
+        throw new Error(result)
+    } catch (error) {
+        console.error(JSON.stringify(error))
+        return { error }
+    }
+
+}
+
+export default { checkIfSiteExists, login, register, getFiles, getFileContents, save }

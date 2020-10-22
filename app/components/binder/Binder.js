@@ -95,8 +95,8 @@ const Error = (props) => {
 
 const Binder = (props) => {
     const site = props.match.params.site
-    const [view, setView] = useState('loading')
     const [token, setToken] = useState(false)
+    const [view, setView] = useState('loading')
     const history = useHistory()
     const TOKEN_KEY = '@BinderToken:' + site
 
@@ -109,7 +109,8 @@ const Binder = (props) => {
         if (siteExists) {
             const token = localStorage.getItem(TOKEN_KEY)
             if (token) {
-                login(token)
+                setToken(token)
+                setView('site')
             } else {
                 setView('login')
             }
@@ -120,9 +121,6 @@ const Binder = (props) => {
 
     const login = async (token) => {
         localStorage.setItem(TOKEN_KEY, token)
-
-        const files = await apiUtils.getFiles(token)
-        console.log('files')
         setToken(token)
         setView('site')
     }
@@ -138,7 +136,10 @@ const Binder = (props) => {
         case 'loading': return <Loading site={site} />
         case 'create': return <Register site={site} login={login} />
         case 'login': return <Login site={site} login={login} />
-        case 'site': return <Site site={site} logout={logout} />
+        case 'site': return <Site
+            site={site}
+            token={token}
+            logout={logout}/>
         default: return <Error />
     }
 }
