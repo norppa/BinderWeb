@@ -14,11 +14,15 @@
     margin-bottom: 3px;
 }
 
-.selected {
+.open {
     background-color:  #D8E6F3;
     color: black;
     font-weight: 600;
     border-radius: 2px;
+}
+
+.selected {
+    color: black;
 }
 
 .nameRow > * {

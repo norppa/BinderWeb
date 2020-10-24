@@ -2,7 +2,7 @@ import React, { useEffect, useCallback, useState, useRef } from "react";
 
 import './ContextMenu.css'
 
-const ContextMenu = ({ container, visible, setVisible, actions }) => {
+const ContextMenu = ({ container, visible, openContextMenu, actions}) => {
     const [xPos, setXPos] = useState("0px")
     const [yPos, setYPos] = useState("0px")
     const [targetId, setTargetId] = useState('')
@@ -13,8 +13,10 @@ const ContextMenu = ({ container, visible, setVisible, actions }) => {
             event.preventDefault()
 
             const target = event.target.closest('.Folder, .File')
-            if (target) {
-                setTargetId(target.id)
+            const targetId = target ? target.id : false
+            
+            if (targetId) {
+                setTargetId(targetId)
                 setTargetExists(true)
             } else {
                 setTargetId(false)
@@ -23,14 +25,14 @@ const ContextMenu = ({ container, visible, setVisible, actions }) => {
 
             setXPos(`${event.pageX}px`)
             setYPos(`${event.pageY}px`)
-            setVisible(true)
+            openContextMenu(true, targetId)
         } else {
-            setVisible(false)
+            openContextMenu(false)
         }
     }, [])
 
     const handleClick = (event) => {
-        setVisible(false)
+        openContextMenu(false)
     }
 
     useEffect(() => {
@@ -48,7 +50,7 @@ const ContextMenu = ({ container, visible, setVisible, actions }) => {
                 {
                     targetExists
                         ? <>
-                            <li>Rename</li>
+                            <li onClick={actions.rename.bind(this, targetId)}>Rename</li>
                             <li>Delete</li>
                         </>
                         : <>
