@@ -5,7 +5,7 @@ import apiUtils from '../../utils/apiUtils'
 import './Site.css'
 
 const Site = (props) => {
-    const [contents, setContents] = useState([])
+    const [fileList, setFileList] = useState([])
     const [selected, setSelected] = useState(false)
     const [text, setText] = useState('')
     const [contextMenuVisible, setContextMenuVisible] = useState(false)
@@ -13,33 +13,36 @@ const Site = (props) => {
     const navigationRef = useRef(null)
 
     useEffect(() => {
+        console.log('site useEffect')
         const asyncWrapper = async () => {
-            const contents = await apiUtils.getFiles(props.token)
-            console.log('contents', contents)
-            if (contents.error) {
-                if (contents.error.status === 401) {
+            const fileList = await apiUtils.getFiles(props.token)
+            console.log('fileList', fileList)
+            if (fileList.error) {
+                if (fileList.error.status === 401) {
                     props.logout()
                 }
             }
-            setContents(contents)
+            setFileList(fileList)
         }
         asyncWrapper()
     }, [])
 
-    const toggle = (id) => {
-        setContents(contents.map(item => item.id === id ? { ...item, open: !item.open } : item))
-    }
-
     const select = async (id) => {
-        const selectedFile = contents.find(item => item.id === id)
-        const selectedFileContents = selectedFile.contents || await apiUtils.getFileContents(props.token, id)
-        setContents(contents.map(item => item.id === selected ? { ...item, contents: text, update: true } : item))
+        const selectedFile = fileList.find(item => item.id === id)
+        if (selectedFile.folder) {
+            const newFileList = fileList.map(item => item.id === id ? { ...item, open: !item.open } : item)
+            setFileList(newFileList)
+        } else {
+            const selectedFileContents = selectedFile.contents || await apiUtils.getFileContents(props.token, id)
+            setFileList(fileList.map(item => item.id === selected ? { ...item, contents: text, update: true } : item))
+            setText(selectedFileContents)
+        }
+        // sets edit to true on first load
         setSelected(id)
-        setText(selectedFileContents)
     }
 
     const save = async () => {
-        const data = contents
+        const data = fileList
             .map(item => item.id === selected ? { ...item, contents: text, update: true } : item)
             .filter(item => item.update ||item.create || item.remove )
 
@@ -53,7 +56,7 @@ const Site = (props) => {
                 <button onClick={props.logout}>Logout</button>
             </div>
             <div className="navigation" ref={navigationRef}>
-                <Tree contents={contents} toggle={toggle} select={select} />
+                <Tree fileList={fileList} select={select} selected={selected} />
             </div>
             <div className="editor">
                 <textarea value={text} onChange={(event) => setText(event.target.value)} />

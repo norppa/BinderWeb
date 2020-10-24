@@ -3,7 +3,6 @@ import React, { useEffect, useCallback, useState, useRef } from "react";
 import './ContextMenu.css'
 
 const ContextMenu = ({ container, visible, setVisible, actions }) => {
-    // console.log('x', container, visible, setVisible, actions )
     const [xPos, setXPos] = useState("0px")
     const [yPos, setYPos] = useState("0px")
     const [targetId, setTargetId] = useState('')
