@@ -18,6 +18,7 @@ const Login = (props) => {
     const [error, setError] = useState('')
 
     const submit = async (event) => {
+        console.log('submit', props.site, password)
         event.preventDefault()
         const loginResult = await apiUtils.login(props.site, password)
         if (loginResult.error) {
@@ -106,8 +107,10 @@ const Binder = (props) => {
 
     const initialize = async () => {
         const siteExists = await apiUtils.checkIfSiteExists(site)
+        console.log('siteExists', siteExists)
         if (siteExists) {
             const token = localStorage.getItem(TOKEN_KEY)
+            console.log('token', token)
             if (token) {
                 setToken(token)
                 setView('site')

@@ -13,7 +13,7 @@ const Tree = (props) => {
             {children.map(item => {
                 if (item.folder) {
                     return (
-                        <div key={item.id} className="Folder">
+                        <div key={item.id} className="Folder" id={item.id}>
                             <span className="nameRow" onClick={props.toggle.bind(this, item.id)}>
                                 {item.open ? <TiFolderOpen /> : <TiFolder />}
                                 {item.name}
@@ -30,7 +30,7 @@ const Tree = (props) => {
                     )
                 } else {
                     return (
-                        <div key={item.id} className="File nameRow" onClick={props.select.bind(this, item.id)}>
+                        <div key={item.id} className="File nameRow" id={item.id} onClick={props.select.bind(this, item.id)}>
                             <TiDocumentText />
                             {item.name}
                         </div>

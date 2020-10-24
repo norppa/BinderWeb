@@ -68,7 +68,7 @@ const getFiles = async (token) => {
         if (result.status === 200) {
             return await result.json()
         }
-        throw new Error(result)
+        return { error: result }
     } catch (error) {
         console.error(error)
         return { error }

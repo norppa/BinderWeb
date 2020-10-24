@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
+import ContextMenu from './ContextMenu'
 import Tree from './Tree'
 import apiUtils from '../../utils/apiUtils'
 import './Site.css'
@@ -7,10 +8,19 @@ const Site = (props) => {
     const [contents, setContents] = useState([])
     const [selected, setSelected] = useState(false)
     const [text, setText] = useState('')
+    const [contextMenuVisible, setContextMenuVisible] = useState(false)
+
+    const navigationRef = useRef(null)
 
     useEffect(() => {
         const asyncWrapper = async () => {
             const contents = await apiUtils.getFiles(props.token)
+            console.log('contents', contents)
+            if (contents.error) {
+                if (contents.error.status === 401) {
+                    props.logout()
+                }
+            }
             setContents(contents)
         }
         asyncWrapper()
@@ -42,12 +52,18 @@ const Site = (props) => {
                 <button onClick={save}>Save</button>
                 <button onClick={props.logout}>Logout</button>
             </div>
-            <div className="navigation">
+            <div className="navigation" ref={navigationRef}>
                 <Tree contents={contents} toggle={toggle} select={select} />
             </div>
             <div className="editor">
                 <textarea value={text} onChange={(event) => setText(event.target.value)} />
             </div>
+
+            <ContextMenu
+                container={navigationRef}
+                visible={contextMenuVisible}
+                setVisible={setContextMenuVisible}
+                actions={props.actions} />
 
         </div>
     )
