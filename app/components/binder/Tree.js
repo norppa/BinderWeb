@@ -30,7 +30,7 @@ const Tree = (props) => {
                 const classNames = 'nameRow'
                     + (item.id === props.open ? ' open' : '')
                     + (item.id === props.selected ? ' selected' : '')
-                const icon = item.folder ? (open ? <TiFolderOpen /> : <TiFolder />) : <TiDocumentText />
+                const icon = item.folder ? (item.open ? <TiFolderOpen /> : <TiFolder />) : <TiDocumentText />
 
                 return (
                     <div key={item.id} className={item.folder ? 'Folder' : 'File'} id={item.id}>

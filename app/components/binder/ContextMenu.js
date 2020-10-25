@@ -68,7 +68,7 @@ const ContextMenu = ({ container, visible, openContextMenu, actions }) => {
             default: return (
                 <>
                     <li onClick={actions.create.bind(this, null, 'file')}>New File</li>
-                    <li>New Folder</li>
+                    <li onClick={actions.create.bind(this, null, 'folder')}>New Folder</li>
                 </>
             )
         }
