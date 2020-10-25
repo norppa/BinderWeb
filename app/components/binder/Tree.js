@@ -20,7 +20,7 @@ const RenameInput = (props) => {
 const Tree = (props) => {
     const parent = props.parent || null
     const children = props.fileList
-        .filter(item => item.parent === parent)
+        .filter(item => !item.remove && item.parent === parent)
         .sort((a, b) => a.folder ? -1 : 1)
 
     return (

@@ -2,30 +2,33 @@ import React, { useEffect, useCallback, useState, useRef } from "react";
 
 import './ContextMenu.css'
 
-const ContextMenu = ({ container, visible, openContextMenu, actions}) => {
+const ContextMenu = ({ container, visible, openContextMenu, actions }) => {
     const [xPos, setXPos] = useState("0px")
     const [yPos, setYPos] = useState("0px")
     const [targetId, setTargetId] = useState('')
-    const [targetExists, setTargetExists] = useState(false)
+    const [targetType, setTargetType] = useState(false)
 
     const handleContextMenu = useCallback((event) => {
         if (container.current.contains(event.target)) {
             event.preventDefault()
 
-            const target = event.target.closest('.Folder, .File')
-            const targetId = target ? target.id : false
-            
-            if (targetId) {
-                setTargetId(targetId)
-                setTargetExists(true)
+            let foundTargetId, foundTargetType
+            const target = event.target.closest('.File, .Folder')
+            if (target.classList.contains('File')) {
+                foundTargetId = Number(target.id)
+                foundTargetType = 'file'
+            } else if (target.classList.contains('Folder')) {
+                foundTargetId = Number(target.id)
+                foundTargetType = 'folder'
             } else {
-                setTargetId(false)
-                setTargetExists(false)
+                foundTargetId = false
+                foundTargetType = 'none'
             }
-
             setXPos(`${event.pageX}px`)
             setYPos(`${event.pageY}px`)
-            openContextMenu(true, targetId)
+            setTargetId(foundTargetId)
+            setTargetType(foundTargetType)
+            openContextMenu(true, foundTargetId)
         } else {
             openContextMenu(false)
         }
@@ -44,21 +47,35 @@ const ContextMenu = ({ container, visible, openContextMenu, actions}) => {
         };
     })
 
+    const Content = () => {
+        switch (targetType) {
+            case 'file': return (
+                <>
+                    <li onClick={actions.rename.bind(this, targetId)}>Rename</li>
+                    <li onClick={actions.deleteFile.bind(this, targetId)}>Delete</li>
+                </>
+            )
+            case 'folder': return (
+                <>
+                    <li onClick={actions.rename.bind(this, targetId)}>Rename</li>
+                    <li>Delete</li>
+                    <li>New File</li>
+                    <li>New Folder</li>
+                </>
+            )
+            default: return (
+                <>
+                    <li>New File</li>
+                    <li>New Folder</li>
+                </>
+            )
+        }
+    }
+
     if (visible) {
         return (
             <ul className="menu" style={{ top: yPos, left: xPos }}>
-                {
-                    targetExists
-                        ? <>
-                            <li onClick={actions.rename.bind(this, targetId)}>Rename</li>
-                            <li>Delete</li>
-                        </>
-                        : <>
-                            <li>New File</li>
-                            <li>New Folder</li>
-                        </>
-                }
-
+                <Content />
             </ul>
         );
     }

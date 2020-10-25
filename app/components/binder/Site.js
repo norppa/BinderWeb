@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react'
 import ContextMenu from './ContextMenu'
+import ConfirmDeleteModal from './ConfirmDeleteModal'
 import Tree from './Tree'
 import apiUtils from '../../utils/apiUtils'
 import './Site.css'
 
 const Site = (props) => {
-    // for ContextMenu event listeners
     const [fileList, setFileList] = useState([])
     const [selected, setSelected] = useState(false)
     const [rename, setRename] = useState(false)
@@ -13,6 +13,7 @@ const Site = (props) => {
     const [text, setText] = useState('')
     const [modified, setModified] = useState(false)
     const [contextMenuVisible, setContextMenuVisible] = useState(false)
+    const [confirmDeleteModal, setConfirmDeleteModal] = useState(false)
 
     const navigationRef = useRef(null)
 
@@ -29,7 +30,7 @@ const Site = (props) => {
         asyncWrapper()
     }, [])
 
-    
+
 
     const save = async () => {
         const data = fileList
@@ -37,6 +38,10 @@ const Site = (props) => {
             .filter(item => item.update || item.create || item.remove)
 
         await apiUtils.save(data, props.token)
+    }
+
+    const markForDeletion = (id) => {
+        setFileList(fileList.map(file => file.id === id ? { ...file, remove: true } : file))
     }
 
     const treeActions = {
@@ -72,6 +77,11 @@ const Site = (props) => {
         rename: (id) => {
             setSelected(false)
             setRename(Number(id))
+        },
+        deleteFile: (id) => {
+            setConfirmDeleteModal(fileList.find(file => file.id === id))
+            setContextMenuVisible(false)
+            setSelected(false)
         }
     }
 
@@ -99,6 +109,7 @@ const Site = (props) => {
             <div className="header">
                 <button onClick={save}>Save</button>
                 <button onClick={props.logout}>Logout</button>
+                <button onClick={() => console.log(fileList)}>DEBUG</button>
             </div>
             <div className="navigation" ref={navigationRef}>
                 <Tree fileList={fileList}
@@ -117,6 +128,11 @@ const Site = (props) => {
                 openContextMenu={openContextMenu}
                 actions={menuActions}
                 fileList={fileList} />
+
+            <ConfirmDeleteModal
+                confirm={confirmDeleteModal}
+                delete={markForDeletion}
+                close={setConfirmDeleteModal.bind(this, false)} />
 
         </div>
     )
