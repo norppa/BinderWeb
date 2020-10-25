@@ -12,6 +12,7 @@ const RenameInput = (props) => {
                 value={renameText}
                 onChange={(event) => setRenameText(event.target.value)}
                 onBlur={props.actions.cancelRename}
+                onFocus={(event) => event.target.select()}
                 autoFocus={true} />
         </form>
     )
@@ -26,7 +27,6 @@ const Tree = (props) => {
     return (
         <div className="Tree">
             {children.map(item => {
-
                 const classNames = 'nameRow'
                     + (item.id === props.open ? ' open' : '')
                     + (item.id === props.selected ? ' selected' : '')

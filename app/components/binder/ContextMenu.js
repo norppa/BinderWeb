@@ -54,20 +54,20 @@ const ContextMenu = ({ container, visible, openContextMenu, actions }) => {
             case 'file': return (
                 <>
                     <li onClick={actions.rename.bind(this, targetId)}>Rename</li>
-                    <li onClick={actions.deleteFile.bind(this, targetId)}>Delete</li>
+                    <li onClick={actions.delete.bind(this, targetId)}>Delete</li>
                 </>
             )
             case 'folder': return (
                 <>
                     <li onClick={actions.rename.bind(this, targetId)}>Rename</li>
-                    <li onClick={actions.deleteFolder.bind(this, targetId)}>Delete</li>
+                    <li onClick={actions.delete.bind(this, targetId)}>Delete</li>
                     <li>New File</li>
                     <li>New Folder</li>
                 </>
             )
             default: return (
                 <>
-                    <li>New File</li>
+                    <li onClick={actions.create.bind(this, null, 'file')}>New File</li>
                     <li>New Folder</li>
                 </>
             )

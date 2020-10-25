@@ -33,19 +33,35 @@ const Site = (props) => {
 
 
     const save = async () => {
+        console.log('saving', open, text)
         const data = fileList
-            .map(item => item.id === selected ? { ...item, contents: text, update: true } : item)
+            .map(item => item.id === open ? { ...item, contents: text, update: true } : item)
             .filter(item => item.update || item.create || item.remove)
 
-        await apiUtils.save(data, props.token)
+        const result = await apiUtils.save(data, props.token)
+        if (result.error) {
+            return console.error('something went horribly wrong', error)
+        }
+
+        console.log('Got a response from save')
+        console.log(result)
+        const resultDataToSave = result
+            .filter(file => !file.remove)
+            .map(file => {
+                const { id, name, folder, parent, contents } = file
+                return { id, name, folder, parent, contents }
+            })
+        // remove modified
+        let newFileList = fileList
+            .filter(file => !(file.remove || file.create || file.update))
+            .concat(resultDataToSave)
+        setFileList(newFileList)
     }
 
     const markForDeletion = (id) => {
-        console.log('mark', id)
         const recursiveMarkForDeletion = (id, fileList) => {
             const fileObj = fileList.find(file => file.id === id)
             let newFileList = fileList.map(file => file.id === id ? { ...file, remove: true } : file)
-            console.log('recursive new file list creation', id, newFileList)
             if (fileObj.folder) {
                 newFileList
                     .filter(file => file.parent === id)
@@ -53,7 +69,6 @@ const Site = (props) => {
                         newFileList = recursiveMarkForDeletion(child.id, newFileList)
                     })
             }
-            console.log('recursive', id, newFileList)
             return newFileList
         }
         setFileList(recursiveMarkForDeletion(id, fileList))
@@ -68,7 +83,9 @@ const Site = (props) => {
                 if (modified) {
                     setFileList(fileList.map(item => item.id === open ? { ...item, contents: text, update: true } : item))
                 }
-                const selectedFileContents = selectedFile.contents || await apiUtils.getFileContents(props.token, id)
+                const selectedFileContents = selectedFile.contents !== undefined
+                    ? selectedFile.contents
+                    : await apiUtils.getFileContents(props.token, id)
                 setText(selectedFileContents)
                 setModified(false)
                 setOpen(id)
@@ -93,15 +110,24 @@ const Site = (props) => {
             setSelected(false)
             setRename(Number(id))
         },
-        deleteFile: (id) => {
+        delete: (id) => {
             setConfirmDeleteModal(fileList.find(file => file.id === id))
             setContextMenuVisible(false)
             setSelected(false)
         },
-        deleteFolder: (id) => {
-            setConfirmDeleteModal(fileList.find(file => file.id === id))
-            setContextMenuVisible(false)
-            setSelected(false)
+        create: (parent, type) => {
+            const id = 'new_' + fileList.reduce((acc, cur) => cur.id.toString().includes('new') ? acc + 1 : acc, 0)
+            const name = 'new_file_' + (fileList.filter(file => file.parent === parent && file.name.includes('new_file_')).length + 1)
+            const newFile = {
+                id,
+                name,
+                parent,
+                folder: type !== 'file',
+                contents: type === 'file' ? '' : null,
+                create: true
+            }
+            setFileList(fileList.concat(newFile))
+            setRename(id)
         }
     }
 
@@ -129,7 +155,7 @@ const Site = (props) => {
             <div className="header">
                 <button onClick={save}>Save</button>
                 <button onClick={props.logout}>Logout</button>
-                <button onClick={() => console.log(fileList)}>DEBUG</button>
+                <button onClick={() => console.log(modified, text, selected, fileList)}>DEBUG</button>
             </div>
             <div className="navigation" ref={navigationRef}>
                 <Tree fileList={fileList}
@@ -139,7 +165,7 @@ const Site = (props) => {
                     actions={treeActions} />
             </div>
             <div className="editor">
-                <textarea value={text} onChange={handleTextChange} />
+                <textarea value={text} onChange={handleTextChange} disabled={!open}/>
             </div>
 
             <ContextMenu
