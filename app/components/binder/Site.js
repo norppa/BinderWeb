@@ -72,6 +72,11 @@ const Site = (props) => {
             return newFileList
         }
         setFileList(recursiveMarkForDeletion(id, fileList))
+        if (open === id) {
+            setOpen(false)
+            setText('')
+        }
+        if (selected === id) setSelected(false)
     }
 
     const treeActions = {
