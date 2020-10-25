@@ -14,12 +14,14 @@ const ContextMenu = ({ container, visible, openContextMenu, actions }) => {
 
             let foundTargetId, foundTargetType
             const target = event.target.closest('.File, .Folder')
-            if (target.classList.contains('File')) {
-                foundTargetId = Number(target.id)
-                foundTargetType = 'file'
-            } else if (target.classList.contains('Folder')) {
-                foundTargetId = Number(target.id)
-                foundTargetType = 'folder'
+            if (target) {
+                if (target.classList.contains('File')) {
+                    foundTargetId = Number(target.id)
+                    foundTargetType = 'file'
+                } else {
+                    foundTargetId = Number(target.id)
+                    foundTargetType = 'folder'
+                }
             } else {
                 foundTargetId = false
                 foundTargetType = 'none'
@@ -58,7 +60,7 @@ const ContextMenu = ({ container, visible, openContextMenu, actions }) => {
             case 'folder': return (
                 <>
                     <li onClick={actions.rename.bind(this, targetId)}>Rename</li>
-                    <li>Delete</li>
+                    <li onClick={actions.deleteFolder.bind(this, targetId)}>Delete</li>
                     <li>New File</li>
                     <li>New Folder</li>
                 </>

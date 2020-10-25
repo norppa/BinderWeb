@@ -40,8 +40,10 @@ const ConfirmDeleteModal = (props) => {
             contentLabel="Confirm Delete File"
         >
             <div style={customStyles.container}>
-                <span>Are you sure you want to delete {props.confirm.name}?</span>
-                <br />
+                {props.confirm.folder
+                    ? <span>Are you sure you want to delete folder "{props.confirm.name}" and all its contents?</span>
+                    : <span>Are you sure you want to delete file "{props.confirm.name}"?</span>
+                }
                 <div style={customStyles.buttonRow}>
                     <button onClick={pressDelete}>Delete</button>
                     <button onClick={props.close}>Cancel</button>

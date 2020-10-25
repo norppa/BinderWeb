@@ -41,7 +41,22 @@ const Site = (props) => {
     }
 
     const markForDeletion = (id) => {
-        setFileList(fileList.map(file => file.id === id ? { ...file, remove: true } : file))
+        console.log('mark', id)
+        const recursiveMarkForDeletion = (id, fileList) => {
+            const fileObj = fileList.find(file => file.id === id)
+            let newFileList = fileList.map(file => file.id === id ? { ...file, remove: true } : file)
+            console.log('recursive new file list creation', id, newFileList)
+            if (fileObj.folder) {
+                newFileList
+                    .filter(file => file.parent === id)
+                    .forEach(child => {
+                        newFileList = recursiveMarkForDeletion(child.id, newFileList)
+                    })
+            }
+            console.log('recursive', id, newFileList)
+            return newFileList
+        }
+        setFileList(recursiveMarkForDeletion(id, fileList))
     }
 
     const treeActions = {
@@ -79,6 +94,11 @@ const Site = (props) => {
             setRename(Number(id))
         },
         deleteFile: (id) => {
+            setConfirmDeleteModal(fileList.find(file => file.id === id))
+            setContextMenuVisible(false)
+            setSelected(false)
+        },
+        deleteFolder: (id) => {
             setConfirmDeleteModal(fileList.find(file => file.id === id))
             setContextMenuVisible(false)
             setSelected(false)
