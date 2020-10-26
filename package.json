@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/norppa/ReactSkeleton#readme",
   "dependencies": {
+    "mousetrap": "^1.6.5",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-icons": "^3.11.0",

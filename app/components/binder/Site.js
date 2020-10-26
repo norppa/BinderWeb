@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
+import Mousetrap from 'mousetrap'
 import ContextMenu from './ContextMenu'
 import ConfirmDeleteModal from './ConfirmDeleteModal'
 import Tree from './Tree'
@@ -30,6 +31,11 @@ const Site = (props) => {
         asyncWrapper()
     }, [])
 
+    Mousetrap.bind('ctrl+s', (event) => {
+        event.preventDefault()
+        save()
+
+    })
 
 
     const save = async () => {
