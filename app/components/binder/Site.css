@@ -6,32 +6,38 @@ body {
 .Site {
     position: absolute;
     background-color: #32394D;
+    font-family: "Times New Roman";
+    font-size: 18px;
+    color: #D8E6F3;
     height: 100%;
     width: 100%;
-    display: grid;
-    grid-template-rows: 30px auto;
-    grid-template-columns: fit-content(500px) auto;
-    grid-template-areas: 
-        "header header" 
-        "navi editor" 
-        "navi editor";
-}
-
-.header {
-    grid-area: header;
     display: flex;
     flex-direction: row;
-    justify-content: flex-end;
-    padding-right: 5px;
-    padding-top: 5px;
+}
+
+.button {
+    cursor: pointer;
 }
 
 .navigation {
+    min-width: 200px;
+    padding-top: 5px;
     grid-area: navi;
 }
 
+.navigationButtonRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-size: 20px;
+    padding: 10px;
+    margin-left: 5px;
+    margin-bottom: 5px;
+    border-bottom: 2px solid #D8E6F3;
+}
+
 .editor {
-    grid-area: editor;
+    flex-grow: 1;
     padding: 5px;
 }
 

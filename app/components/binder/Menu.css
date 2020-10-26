@@ -1,0 +1,16 @@
+.Menu {
+    color: #D8E6F3;
+    font-size: 16px;
+    width: 150px;
+}
+
+.Menu .item {
+    padding: 1px 3px;
+}
+
+.Menu .item:hover {
+    background-color: #D8E6F3;
+    color: black;
+    border-radius: 2px;
+    cursor: pointer;
+}

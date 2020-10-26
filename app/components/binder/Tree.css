@@ -1,7 +1,4 @@
 .Tree {
-    font-family: "Times New Roman";
-    font-size: 18px;
-    color: #D8E6F3;
     padding-left: 10px;
     cursor: pointer;
     margin-right: 10px;
@@ -16,7 +13,7 @@
 }
 
 .open {
-    background-color:  #D8E6F3;
+    background-color: #D8E6F3;
     color: black;
     font-weight: 600;
     border-radius: 2px;
@@ -26,10 +23,9 @@
     color: black;
 }
 
-.nameRow > * {
+.nameRow>* {
     margin-right: 5px;
 }
-
 
 .folderContents {
     padding-left: 10px;

@@ -76,7 +76,7 @@ const ContextMenu = ({ container, visible, openContextMenu, actions }) => {
 
     if (visible) {
         return (
-            <ul className="menu" style={{ top: yPos, left: xPos }}>
+            <ul className="ContextMenu" style={{ top: yPos, left: xPos }}>
                 <Content />
             </ul>
         );

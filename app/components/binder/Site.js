@@ -1,5 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react'
 import Mousetrap from 'mousetrap'
+import { TiFolder, TiThMenuOutline, TiThMenu, TiUpload } from 'react-icons/ti'
+
+import Menu from './Menu'
 import ContextMenu from './ContextMenu'
 import ConfirmDeleteModal from './ConfirmDeleteModal'
 import Tree from './Tree'
@@ -12,9 +15,10 @@ const Site = (props) => {
     const [rename, setRename] = useState(false)
     const [open, setOpen] = useState(false)
     const [text, setText] = useState('')
-    const [modified, setModified] = useState(false)
+    const [textModified, setTextModified] = useState(false)
     const [contextMenuVisible, setContextMenuVisible] = useState(false)
     const [confirmDeleteModal, setConfirmDeleteModal] = useState(false)
+    const [menuVisible, setMenuVisible] = useState(false)
 
     const navigationRef = useRef(null)
 
@@ -34,9 +38,7 @@ const Site = (props) => {
     Mousetrap.bind('ctrl+s', (event) => {
         event.preventDefault()
         save()
-
     })
-
 
     const save = async () => {
         console.log('saving', open, text)
@@ -91,14 +93,14 @@ const Site = (props) => {
             if (selectedFile.folder) {
                 setFileList(fileList.map(item => item.id == id ? { ...item, open: !item.open } : item))
             } else {
-                if (modified) {
+                if (textModified) {
                     setFileList(fileList.map(item => item.id == open ? { ...item, contents: text, update: true } : item))
                 }
                 const selectedFileContents = selectedFile.contents !== undefined
                     ? selectedFile.contents
                     : await apiUtils.getFileContents(props.token, id)
                 setText(selectedFileContents)
-                setModified(false)
+                setTextModified(false)
                 setOpen(id)
             }
         },
@@ -112,7 +114,7 @@ const Site = (props) => {
         }
     }
 
-    const menuActions = {
+    const contextMenuActions = {
         select: (id) => {
             console.log('selecting', id)
             setSelected(id)
@@ -142,14 +144,16 @@ const Site = (props) => {
             if (parent) newFileList = newFileList.map(file => file.id == parent ? { ...file, open: true } : file)
             setFileList(newFileList)
             setRename(id)
-
-            //BUG: when creating a folder, one can't create a file into that folder
         }
+    }
+
+    const menuActions = {
+        logout: props.logout
     }
 
     const handleTextChange = (event) => {
         setText(event.target.value)
-        setModified(true)
+        setTextModified(true)
     }
 
     const openContextMenu = (value, targetId) => {
@@ -168,12 +172,16 @@ const Site = (props) => {
 
     return (
         <div className="Site">
-            <div className="header">
-                <button onClick={save}>Save</button>
-                <button onClick={props.logout}>Logout</button>
-                <button onClick={() => console.log(modified, text, selected, fileList)}>DEBUG</button>
-            </div>
             <div className="navigation" ref={navigationRef}>
+                <div className="navigationButtonRow">
+                    <div>
+                        <TiThMenu className="button" onClick={setMenuVisible.bind(this, !menuVisible)} />
+                        <Menu visible={menuVisible} actions={menuActions} />
+                    </div>
+                    {fileList.some(file => file.update || file.create || file.remove)
+                        && <TiUpload className="button" onClick={save} />}
+
+                </div>
                 <Tree fileList={fileList}
                     open={open}
                     selected={selected}
@@ -188,7 +196,7 @@ const Site = (props) => {
                 container={navigationRef}
                 visible={contextMenuVisible}
                 openContextMenu={openContextMenu}
-                actions={menuActions}
+                actions={contextMenuActions}
                 fileList={fileList} />
 
             <ConfirmDeleteModal

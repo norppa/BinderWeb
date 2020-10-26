@@ -1,4 +1,4 @@
-.menu {
+.ContextMenu {
     background-color: #fff;
     border: 1px solid black;
     border-radius: 5px;
@@ -8,13 +8,13 @@
     list-style: none;
   }
   
-  .menu li {
+  .ContextMenu li {
     padding: 0.2em 1em;
     color: #000;
     cursor: pointer;
   }
   
-  .menu li:hover {
+  .ContextMenu li:hover {
     background-color: #f2f2f2;
     border-radius: 5px;
   }
