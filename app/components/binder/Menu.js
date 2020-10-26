@@ -8,6 +8,8 @@ const Menu = (props) => {
     return (
         <div className="Menu">
             <div className="item" onClick={props.actions.logout}>Log Out</div>
+            <div>Change Password</div>
+            <div>Delete Site</div>
         </div>
     )
 }

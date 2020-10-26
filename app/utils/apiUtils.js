@@ -1,5 +1,5 @@
-// const backend = 'http://localhost:3000/binder'
-const backend = 'https://jtthaavi.kapsi.fi/subrosa/binder'
+const backend = 'http://localhost:3009/binder'
+// const backend = 'https://jtthaavi.kapsi.fi/subrosa/binder'
 
 const checkIfSiteExists = async (site) => {
     if (typeof site !== 'string' || site === '') return { error: 'parameter site required, received ' + site }

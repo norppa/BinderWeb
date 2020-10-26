@@ -42,16 +42,14 @@ const Site = (props) => {
 
     const save = async () => {
         console.log('saving', open, text)
-        const data = fileList
-            .map(item => item.id == open ? { ...item, contents: text, update: true } : item)
-            .filter(item => item.update || item.create || item.remove)
+        let newFileList = fileList.map(item => item.id == open ? { ...item, contents: text, update: true } : item)
+        const data = newFileList.filter(item => item.update || item.create || item.remove)
 
         const result = await apiUtils.save(data, props.token)
         if (result.error) {
             return console.error('something went horribly wrong', result.error)
         }
 
-        console.log('Got a response from save')
         console.log(result)
         const resultDataToSave = result
             .filter(file => !file.remove)
@@ -60,10 +58,11 @@ const Site = (props) => {
                 return { id, name, folder, parent, contents }
             })
         // remove modified
-        let newFileList = fileList
+        newFileList = newFileList
             .filter(file => !(file.remove || file.create || file.update))
             .concat(resultDataToSave)
         setFileList(newFileList)
+        setTextModified(false)
     }
 
     const markForDeletion = (id) => {
@@ -178,7 +177,7 @@ const Site = (props) => {
                         <TiThMenu className="button" onClick={setMenuVisible.bind(this, !menuVisible)} />
                         <Menu visible={menuVisible} actions={menuActions} />
                     </div>
-                    {fileList.some(file => file.update || file.create || file.remove)
+                    {(textModified || fileList.some(file => file.update || file.create || file.remove))
                         && <TiUpload className="button" onClick={save} />}
 
                 </div>
@@ -189,7 +188,7 @@ const Site = (props) => {
                     actions={treeActions} />
             </div>
             <div className="editor">
-                <textarea value={text} onChange={handleTextChange} disabled={!open} />
+                <textarea className="mousetrap" value={text} onChange={handleTextChange} disabled={!open} />
             </div>
 
             <ContextMenu
