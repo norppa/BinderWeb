@@ -6,8 +6,13 @@ const RenameInput = (props) => {
 
     const [renameText, setRenameText] = useState(props.name)
 
+    const onSubmit = (event) => {
+        event.preventDefault()
+        props.actions.submitRename(renameText)
+    }
+
     return (
-        <form onSubmit={props.actions.submitRename.bind(this, renameText)}>
+        <form onSubmit={onSubmit}>
             <input type="text"
                 value={renameText}
                 onChange={(event) => setRenameText(event.target.value)}

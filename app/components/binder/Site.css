@@ -10,7 +10,7 @@ body {
     width: 100%;
     display: grid;
     grid-template-rows: 30px auto;
-    grid-template-columns: 200px auto;
+    grid-template-columns: fit-content(500px) auto;
     grid-template-areas: 
         "header header" 
         "navi editor" 

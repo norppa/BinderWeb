@@ -35,12 +35,12 @@ const Site = (props) => {
     const save = async () => {
         console.log('saving', open, text)
         const data = fileList
-            .map(item => item.id === open ? { ...item, contents: text, update: true } : item)
+            .map(item => item.id == open ? { ...item, contents: text, update: true } : item)
             .filter(item => item.update || item.create || item.remove)
 
         const result = await apiUtils.save(data, props.token)
         if (result.error) {
-            return console.error('something went horribly wrong', error)
+            return console.error('something went horribly wrong', result.error)
         }
 
         console.log('Got a response from save')
@@ -60,11 +60,11 @@ const Site = (props) => {
 
     const markForDeletion = (id) => {
         const recursiveMarkForDeletion = (id, fileList) => {
-            const fileObj = fileList.find(file => file.id === id)
-            let newFileList = fileList.map(file => file.id === id ? { ...file, remove: true } : file)
+            const fileObj = fileList.find(file => file.id == id)
+            let newFileList = fileList.map(file => file.id == id ? { ...file, remove: true } : file)
             if (fileObj.folder) {
                 newFileList
-                    .filter(file => file.parent === id)
+                    .filter(file => file.parent == id)
                     .forEach(child => {
                         newFileList = recursiveMarkForDeletion(child.id, newFileList)
                     })
@@ -72,7 +72,7 @@ const Site = (props) => {
             return newFileList
         }
         setFileList(recursiveMarkForDeletion(id, fileList))
-        if (open === id) {
+        if (open == id) {
             setOpen(false)
             setText('')
         }
@@ -81,12 +81,12 @@ const Site = (props) => {
 
     const treeActions = {
         select: async (id) => {
-            const selectedFile = fileList.find(item => item.id === id)
+            const selectedFile = fileList.find(item => item.id == id)
             if (selectedFile.folder) {
-                setFileList(fileList.map(item => item.id === id ? { ...item, open: !item.open } : item))
+                setFileList(fileList.map(item => item.id == id ? { ...item, open: !item.open } : item))
             } else {
                 if (modified) {
-                    setFileList(fileList.map(item => item.id === open ? { ...item, contents: text, update: true } : item))
+                    setFileList(fileList.map(item => item.id == open ? { ...item, contents: text, update: true } : item))
                 }
                 const selectedFileContents = selectedFile.contents !== undefined
                     ? selectedFile.contents
@@ -101,7 +101,7 @@ const Site = (props) => {
             setRename(false)
         },
         submitRename: (name) => {
-            setFileList(fileList.map(file => file.id === rename ? { ...file, name, update: true } : file))
+            setFileList(fileList.map(file => file.id == rename ? { ...file, name, update: true } : file))
             setRename(false)
         }
     }
@@ -113,14 +113,15 @@ const Site = (props) => {
         },
         rename: (id) => {
             setSelected(false)
-            setRename(Number(id))
+            setRename(id)
         },
         delete: (id) => {
-            setConfirmDeleteModal(fileList.find(file => file.id === id))
+            setConfirmDeleteModal(fileList.find(file => file.id == id))
             setContextMenuVisible(false)
             setSelected(false)
         },
         create: (parent, type) => {
+            console.log('create', parent, type)
             const id = 'new_' + fileList.reduce((acc, cur) => cur.id.toString().includes('new') ? acc + 1 : acc, 0)
             const name = 'new_file_' + (fileList.filter(file => file.parent === parent && file.name.includes('new_file_')).length + 1)
             const newFile = {
@@ -131,8 +132,12 @@ const Site = (props) => {
                 contents: type === 'file' ? '' : null,
                 create: true
             }
-            setFileList(fileList.concat(newFile))
+            let newFileList = fileList.concat(newFile)
+            if (parent) newFileList = newFileList.map(file => file.id == parent ? { ...file, open: true } : file)
+            setFileList(newFileList)
             setRename(id)
+
+            //BUG: when creating a folder, one can't create a file into that folder
         }
     }
 
@@ -145,7 +150,7 @@ const Site = (props) => {
         if (value) {
             setContextMenuVisible(true)
             if (targetId) {
-                setSelected(Number(targetId))
+                setSelected(targetId)
             } else {
                 setSelected(false)
             }
@@ -170,7 +175,7 @@ const Site = (props) => {
                     actions={treeActions} />
             </div>
             <div className="editor">
-                <textarea value={text} onChange={handleTextChange} disabled={!open}/>
+                <textarea value={text} onChange={handleTextChange} disabled={!open} />
             </div>
 
             <ContextMenu
