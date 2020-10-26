@@ -26,15 +26,15 @@ const RenameInput = (props) => {
 const Tree = (props) => {
     const parent = props.parent || null
     const children = props.fileList
-        .filter(item => !item.remove && item.parent === parent)
+        .filter(item => !item.remove && item.parent == parent)
         .sort((a, b) => a.folder ? -1 : 1)
 
     return (
         <div className="Tree">
             {children.map(item => {
                 const classNames = 'nameRow'
-                    + (item.id === props.open ? ' open' : '')
-                    + (item.id === props.selected ? ' selected' : '')
+                    + (item.id == props.open ? ' open' : '')
+                    + (item.id == props.selected ? ' selected' : '')
                 const icon = item.folder ? (item.open ? <TiFolderOpen /> : <TiFolder />) : <TiDocumentText />
 
                 return (

@@ -2,7 +2,7 @@ import React, { useEffect, useCallback, useState, useRef } from "react";
 
 import './ContextMenu.css'
 
-const ContextMenu = ({ container, visible, openContextMenu, actions }) => {
+const ContextMenu = ({ container, visible, actions }) => {
     const [xPos, setXPos] = useState("0px")
     const [yPos, setYPos] = useState("0px")
     const [targetId, setTargetId] = useState('')
@@ -30,14 +30,14 @@ const ContextMenu = ({ container, visible, openContextMenu, actions }) => {
             setYPos(`${event.pageY}px`)
             setTargetId(foundTargetId)
             setTargetType(foundTargetType)
-            openContextMenu(true, foundTargetId)
+            actions.setMenuOpen(true, foundTargetId)
         } else {
-            openContextMenu(false)
+            actions.setMenuOpen(false)
         }
     }, [])
 
     const handleClick = (event) => {
-        openContextMenu(false)
+        actions.setMenuOpen(false)
     }
 
     useEffect(() => {

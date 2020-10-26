@@ -41,7 +41,6 @@ const Site = (props) => {
     })
 
     const save = async () => {
-        console.log('saving', open, text)
         let newFileList = fileList.map(item => item.id == open ? { ...item, contents: text, update: true } : item)
         const data = newFileList.filter(item => item.update || item.create || item.remove)
 
@@ -50,7 +49,6 @@ const Site = (props) => {
             return console.error('something went horribly wrong', result.error)
         }
 
-        console.log(result)
         const resultDataToSave = result
             .filter(file => !file.remove)
             .map(file => {
@@ -114,6 +112,19 @@ const Site = (props) => {
     }
 
     const contextMenuActions = {
+        setMenuOpen: (value, targetId) => {
+            if (value) {
+                setContextMenuVisible(true)
+                if (targetId) {
+                    setSelected(targetId)
+                } else {
+                    setSelected(false)
+                }
+            } else {
+                setContextMenuVisible(false)
+                setSelected(false)
+            }
+        },
         select: (id) => {
             console.log('selecting', id)
             setSelected(id)
@@ -147,26 +158,13 @@ const Site = (props) => {
     }
 
     const menuActions = {
-        logout: props.logout
+        logout: props.logout,
+        debug: () => console.log(fileList)
     }
 
     const handleTextChange = (event) => {
         setText(event.target.value)
         setTextModified(true)
-    }
-
-    const openContextMenu = (value, targetId) => {
-        if (value) {
-            setContextMenuVisible(true)
-            if (targetId) {
-                setSelected(targetId)
-            } else {
-                setSelected(false)
-            }
-        } else {
-            setContextMenuVisible(false)
-            setSelected(false)
-        }
     }
 
     return (
@@ -194,7 +192,6 @@ const Site = (props) => {
             <ContextMenu
                 container={navigationRef}
                 visible={contextMenuVisible}
-                openContextMenu={openContextMenu}
                 actions={contextMenuActions}
                 fileList={fileList} />
 
