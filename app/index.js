@@ -6,7 +6,7 @@ import Binder from './components/binder/Binder'
 
 const Router = (props) => {
     return (
-        <BrowserRouter>
+        <BrowserRouter basename="binder">
             <Switch>
                 <Route exact path='/' component={Welcome} />
                 <Route path='/:site' component={Binder} />

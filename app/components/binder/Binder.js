@@ -107,10 +107,8 @@ const Binder = (props) => {
 
     const initialize = async () => {
         const siteExists = await apiUtils.checkIfSiteExists(site)
-        console.log('siteExists', siteExists)
         if (siteExists) {
             const token = localStorage.getItem(TOKEN_KEY)
-            console.log('token', token)
             if (token) {
                 setToken(token)
                 setView('site')

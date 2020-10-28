@@ -1,5 +1,5 @@
 {
-  "name": "reactskeleton",
+  "name": "binder",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -18,14 +18,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/norppa/ReactSkeleton.git"
+    "url": "git+https://github.com/norppa/BinderWeb.git"
   },
+  "homepage": "https://jtthaavi.kapsi.fi/binder/",
   "author": "Jari Haavisto",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/norppa/ReactSkeleton/issues"
-  },
-  "homepage": "https://github.com/norppa/ReactSkeleton#readme",
   "dependencies": {
     "mousetrap": "^1.6.5",
     "react": "^16.14.0",
