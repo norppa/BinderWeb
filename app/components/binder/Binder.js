@@ -18,7 +18,6 @@ const Login = (props) => {
     const [error, setError] = useState('')
 
     const submit = async (event) => {
-        console.log('submit', props.site, password)
         event.preventDefault()
         const loginResult = await apiUtils.login(props.site, password)
         if (loginResult.error) {
@@ -127,7 +126,6 @@ const Binder = (props) => {
     }
 
     const logout = () => {
-        console.log('logout')
         localStorage.removeItem(TOKEN_KEY)
         setToken(false)
         history.push('/')

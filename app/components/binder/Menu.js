@@ -9,7 +9,7 @@ const Menu = (props) => {
         <div className="Menu">
             <div className="item" onClick={props.actions.logout}>Log Out</div>
             <div className="item" onClick={props.actions.changePassword}>Change Password</div>
-            <div className="item">Delete Site</div>
+            <div className="item" onClick={props.actions.deleteSite}>Delete Site</div>
         </div>
     )
 }

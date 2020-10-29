@@ -4,7 +4,6 @@ const backend = 'http://localhost:3009/binder'
 const checkIfSiteExists = async (site) => {
     if (typeof site !== 'string' || site === '') return { error: 'parameter site required, received ' + site }
     const url = backend + '/sites/exists/' + site
-    console.log('url', url)
 
     try {
         const fetchResult = await fetch(url)
@@ -55,7 +54,7 @@ const register = async (site, password) => {
 }
 
 const changePassword = async (newPassword, token) => {
-    console.log('changePassword', newPassword, token.substring(0,8))
+    // console.log('changePassword', newPassword, token.substring(0,8))
     const url = backend + '/sites/changePassword'
     const options = {
         method: 'POST',
@@ -69,13 +68,33 @@ const changePassword = async (newPassword, token) => {
 
     try {
         const fetchResult = await fetch(url, options)
-        console.log('fetchResult', fetchResult)
         return await fetchResult.json()
     } catch (error) {
-        console.log('threw an error', error)
         return { error }
     }
+}
 
+const deleteSite = async (token) => {
+    // console.log('deleteSite', token.substring(0,8))
+    const url = backend + '/sites/remove'
+    const options = {
+        method: 'DELETE',
+        headers: {
+            'Authorization': 'Bearer ' + token,
+            'Accept': 'application/json',
+        }
+    }
+
+    try {
+        const fetchResult = await fetch(url, options)
+        if (fetchResult.status !== 200) {
+            console.error(fetchResult.status)
+            throw new Error('There was an error trying to delete the site')
+        }
+        return {}
+    } catch (error) {
+        return { error }
+    }
 }
 
 const getFiles = async (token) => {
@@ -126,7 +145,7 @@ const getFileContents = async (token, id) => {
 }
 
 const save = async (data, token) => {
-    console.log('save', data, token.substring(0, 8))
+    ('save', data, token.substring(0, 8))
     const url = backend + '/files'
     const options = {
         method: 'POST',
@@ -140,7 +159,7 @@ const save = async (data, token) => {
 
     try {
         const result = await fetch(url, options)
-        console.log('save result', result)
+        ('save result', result)
         if (result.status === 200) {
             return await result.json()
         }
@@ -152,4 +171,13 @@ const save = async (data, token) => {
 
 }
 
-export default { checkIfSiteExists, login, register, changePassword, getFiles, getFileContents, save }
+export default {
+    checkIfSiteExists,
+    login,
+    register,
+    changePassword,
+    deleteSite,
+    getFiles,
+    getFileContents,
+    save
+}

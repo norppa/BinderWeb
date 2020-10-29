@@ -4,8 +4,7 @@ import { TiFolder, TiThMenuOutline, TiThMenu, TiUpload } from 'react-icons/ti'
 
 import Menu from './Menu'
 import ContextMenu from './ContextMenu'
-import ConfirmDeleteModal from './ConfirmDeleteModal'
-import ChangePasswordModal from '../modals/ChangePasswordModal'
+import Modals from '../modals/modals'
 import Tree from './Tree'
 import apiUtils from '../../utils/apiUtils'
 import './Site.css'
@@ -20,6 +19,7 @@ const Site = (props) => {
     const [contextMenuVisible, setContextMenuVisible] = useState(false)
     const [confirmDeleteModal, setConfirmDeleteModal] = useState(false)
     const [changePasswordModal, setChangePasswordModal] = useState(false)
+    const [deleteSiteModal, setDeleteSiteModal] = useState(false)
     const [menuVisible, setMenuVisible] = useState(false)
 
     const navigationRef = useRef(null)
@@ -50,7 +50,6 @@ const Site = (props) => {
         if (result.error) {
             return console.error('something went horribly wrong', result.error)
         }
-        console.log('save result', result)
 
         const resultDataToSave = result
             .filter(file => !file.remove)
@@ -129,7 +128,6 @@ const Site = (props) => {
             }
         },
         select: (id) => {
-            console.log('selecting', id)
             setSelected(id)
         },
         rename: (id) => {
@@ -142,7 +140,6 @@ const Site = (props) => {
             setSelected(false)
         },
         create: (parent, type) => {
-            console.log('create', parent, type)
             const id = 'new_' + fileList.reduce((acc, cur) => cur.id.toString().includes('new') ? acc + 1 : acc, 0)
             const name = 'new_file_' + (fileList.filter(file => file.parent === parent && file.name.includes('new_file_')).length + 1)
             const newFile = {
@@ -163,6 +160,7 @@ const Site = (props) => {
     const menuActions = {
         logout: props.logout,
         changePassword: () => setChangePasswordModal(true),
+        deleteSite: () => setDeleteSiteModal(true),
         debug: () => console.log(fileList)
     }
 
@@ -199,17 +197,24 @@ const Site = (props) => {
                 actions={contextMenuActions}
                 fileList={fileList} />
 
-            <ConfirmDeleteModal
-                confirm={confirmDeleteModal}
-                delete={markForDeletion}
-                close={setConfirmDeleteModal.bind(this, false)} />
-            
-            <ChangePasswordModal
+            <Modals.changePassword
                 visible={changePasswordModal}
                 close={setChangePasswordModal.bind(this, false)}
                 site={props.site}
                 token={props.token}
                 updateToken={props.updateToken} />
+
+            <Modals.deleteFile
+                confirm={confirmDeleteModal}
+                delete={markForDeletion}
+                close={setConfirmDeleteModal.bind(this, false)} />
+
+            <Modals.deleteSite
+                visible={deleteSiteModal}
+                close={setDeleteSiteModal.bind(this, false)}
+                site={props.site}
+                token={props.token}
+                logout={props.logout} />
 
         </div>
     )
