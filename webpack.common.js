@@ -1,12 +1,7 @@
-var path = require('path');
-var HtmlWebpackPlugin =  require('html-webpack-plugin');
+const HtmlWebpackPlugin =  require('html-webpack-plugin')
 
 module.exports = {
     entry : './app/index.js',
-    output : {
-        path : path.resolve(__dirname , 'dist'),
-        filename: 'index_bundle.js'
-    },
     module : {
         rules : [
             {test : /\.(js)$/, use:'babel-loader'},
@@ -14,10 +9,6 @@ module.exports = {
             {test : /\.png$/, use: 'file-loader' }
         ]
     },
-    devServer: {
-        historyApiFallback: true
-    },
-    mode:'development',
     plugins : [
         new HtmlWebpackPlugin ({
             template : 'app/index.html'
