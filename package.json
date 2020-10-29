@@ -14,7 +14,7 @@
   },
   "scripts": {
     "start": "webpack serve",
-    "create": "webpack"
+    "build": "webpack"
   },
   "repository": {
     "type": "git",

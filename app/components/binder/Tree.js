@@ -41,7 +41,7 @@ const Tree = (props) => {
                     <div key={item.id} className={item.folder ? 'Folder' : 'File'} id={item.id}>
                         <span className={classNames} onClick={props.actions.select.bind(this, item.id)}>
                             {icon}
-                            {props.rename === item.id
+                            {props.rename == item.id
                                 ? <RenameInput name={item.name} actions={props.actions} />
                                 : item.name}
                         </span>

@@ -48,6 +48,7 @@ const Site = (props) => {
         if (result.error) {
             return console.error('something went horribly wrong', result.error)
         }
+        console.log('save result', result)
 
         const resultDataToSave = result
             .filter(file => !file.remove)
