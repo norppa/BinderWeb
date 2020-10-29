@@ -1,11 +1,11 @@
-// const backend = 'http://localhost:3009/binder'
-const backend = 'https://jtthaavi.kapsi.fi/subrosa/binder'
+const backend = 'http://localhost:3009/binder'
+// const backend = 'https://jtthaavi.kapsi.fi/subrosa/binder'
 
 const checkIfSiteExists = async (site) => {
     if (typeof site !== 'string' || site === '') return { error: 'parameter site required, received ' + site }
     const url = backend + '/sites/exists/' + site
     console.log('url', url)
-    
+
     try {
         const fetchResult = await fetch(url)
         const jsonResult = await fetchResult.json()
@@ -28,7 +28,7 @@ const login = async (site, password) => {
     try {
         const fetchResult = await fetch(url, options)
         if (fetchResult.status === 401) {
-            return { error: 'UNAUTHORIZED'}
+            return { error: 'UNAUTHORIZED' }
         }
         return await fetchResult.json()
     } catch (error) {
@@ -52,6 +52,30 @@ const register = async (site, password) => {
     } catch (error) {
         return { error }
     }
+}
+
+const changePassword = async (newPassword, token) => {
+    console.log('changePassword', newPassword, token.substring(0,8))
+    const url = backend + '/sites/changePassword'
+    const options = {
+        method: 'POST',
+        headers: {
+            'Authorization': 'Bearer ' + token,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json;charset=utf-8'
+        },
+        body: JSON.stringify({ password: newPassword })
+    }
+
+    try {
+        const fetchResult = await fetch(url, options)
+        console.log('fetchResult', fetchResult)
+        return await fetchResult.json()
+    } catch (error) {
+        console.log('threw an error', error)
+        return { error }
+    }
+
 }
 
 const getFiles = async (token) => {
@@ -78,7 +102,7 @@ const getFiles = async (token) => {
 }
 
 const getFileContents = async (token, id) => {
-        // console.log('getFileContents', token, id)
+    // console.log('getFileContents', token, id)
     const url = backend + '/files/' + id
     const options = {
         method: 'GET',
@@ -102,7 +126,7 @@ const getFileContents = async (token, id) => {
 }
 
 const save = async (data, token) => {
-    console.log('save', data, token.substring(0,8))
+    console.log('save', data, token.substring(0, 8))
     const url = backend + '/files'
     const options = {
         method: 'POST',
@@ -128,4 +152,4 @@ const save = async (data, token) => {
 
 }
 
-export default { checkIfSiteExists, login, register, getFiles, getFileContents, save }
+export default { checkIfSiteExists, login, register, changePassword, getFiles, getFileContents, save }

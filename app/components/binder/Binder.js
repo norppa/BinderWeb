@@ -133,6 +133,11 @@ const Binder = (props) => {
         history.push('/')
     }
 
+    const updateToken = (newToken) => {
+        localStorage.setItem(TOKEN_KEY, newToken)
+        setToken(newToken)
+    }
+
     switch (view) {
         case 'loading': return <Loading site={site} />
         case 'create': return <Register site={site} login={login} />
@@ -140,6 +145,7 @@ const Binder = (props) => {
         case 'site': return <Site
             site={site}
             token={token}
+            updateToken={updateToken}
             logout={logout}/>
         default: return <Error />
     }

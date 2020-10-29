@@ -5,6 +5,7 @@ import { TiFolder, TiThMenuOutline, TiThMenu, TiUpload } from 'react-icons/ti'
 import Menu from './Menu'
 import ContextMenu from './ContextMenu'
 import ConfirmDeleteModal from './ConfirmDeleteModal'
+import ChangePasswordModal from '../modals/ChangePasswordModal'
 import Tree from './Tree'
 import apiUtils from '../../utils/apiUtils'
 import './Site.css'
@@ -18,6 +19,7 @@ const Site = (props) => {
     const [textModified, setTextModified] = useState(false)
     const [contextMenuVisible, setContextMenuVisible] = useState(false)
     const [confirmDeleteModal, setConfirmDeleteModal] = useState(false)
+    const [changePasswordModal, setChangePasswordModal] = useState(false)
     const [menuVisible, setMenuVisible] = useState(false)
 
     const navigationRef = useRef(null)
@@ -160,6 +162,7 @@ const Site = (props) => {
 
     const menuActions = {
         logout: props.logout,
+        changePassword: () => setChangePasswordModal(true),
         debug: () => console.log(fileList)
     }
 
@@ -200,6 +203,13 @@ const Site = (props) => {
                 confirm={confirmDeleteModal}
                 delete={markForDeletion}
                 close={setConfirmDeleteModal.bind(this, false)} />
+            
+            <ChangePasswordModal
+                visible={changePasswordModal}
+                close={setChangePasswordModal.bind(this, false)}
+                site={props.site}
+                token={props.token}
+                updateToken={props.updateToken} />
 
         </div>
     )
